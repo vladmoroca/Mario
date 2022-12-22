@@ -21,7 +21,7 @@ const Restart = () => {
   blocks = [];
   player = new Player();
 
-  Enemys.push(new Enemy({ x: BasicSize * 20, y: BasicSize * 10 }, goomba));
+  Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 10 }, goomba));
 
   for (let i = 0; i <= 100; i++) {
     blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 15 }, block));
