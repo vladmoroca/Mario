@@ -1,4 +1,11 @@
-"use strict"
+'use strict';
+
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+const gravity = 0.7;
 
 class Player {
   constructor() {
@@ -17,7 +24,8 @@ class Player {
   }
 
   draw() {
-    context.drawImage(this.skin, this.position.x, this.position.y, this.wigth, this.height);
+    context.drawImage(this.skin, this.position.x, this.position.y,
+      this.wigth, this.height);
   }
   Update() {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -46,7 +54,8 @@ class Enemy {
   }
 
   draw() {
-    context.drawImage(this.skin, this.position.x, this.position.y, this.wigth, this.height);
+    context.drawImage(this.skin, this.position.x,
+      this.position.y, this.wigth, this.height);
   }
   Update() {
     this.position.y += this.velocity.y;
@@ -61,7 +70,7 @@ class Enemy {
 
 
 class Block {
-  constructor({ x, y }) {
+  constructor({ x, y }, src) {
     this.position = {
       x,
       y
@@ -69,54 +78,44 @@ class Block {
     this.wigth = 50;
     this.height = 50;
     this.skin = document.createElement('img');
-    this.skin.src = './assets/block.png';
+    this.skin.src = src;
     this.skin.animatea;
   }
   draw() {
-    context.drawImage(this.skin, this.position.x, this.position.y, this.wigth, this.height);
+    context.drawImage(this.skin, this.position.x,
+      this.position.y, this.wigth, this.height);
   }
 }
 
-Colision = (obj, obstacle) => {
-  if ((obj.position.x + obj.wigth >= obstacle.position.x) &&
-   (obj.position.x + obj.wigth + obj.velocity.x <= obstacle.position.x) &&
-   (obj.position.y <= obstacle.position.y + obstacle.height) &&
-   (obj.position.y + obj.height >= obstacle.position.y)) {
+const Colision = (obj, obs) => {
+  if ((obj.position.x + obj.wigth >= obs.position.x) &&
+   (obj.position.x + obj.wigth + obj.velocity.x <= obs.position.x) &&
+   (obj.position.y <= obs.position.y + obs.height) &&
+   (obj.position.y + obj.height >= obs.position.y)) {
     return 'Left';
   }
 
-  if ((obj.position.x <= obstacle.position.x + obstacle.wigth) &&
-   (obj.position.x + obj.velocity.x >= obstacle.position.x + obstacle.wigth) &&
-   (obj.position.y <= obstacle.position.y + obstacle.height) &&
-   (obj.position.y + obj.height >= obstacle.position.y)) {
+  if ((obj.position.x <= obs.position.x + obs.wigth) &&
+   (obj.position.x + obj.velocity.x >= obs.position.x + obs.wigth) &&
+   (obj.position.y <= obs.position.y + obs.height) &&
+   (obj.position.y + obj.height >= obs.position.y)) {
     return 'Right';
   }
 
-  if ((player.position.x + player.wigth - 3 > obstacle.position.x) &&
-      (player.position.x < obstacle.position.x + obstacle.wigth)) {
-    if ((obj.position.y + obj.height <= obstacle.position.y) &&
-     (obj.position.y + obj.height + obj.velocity.y >= obstacle.position.y)) {
+  if ((obj.position.x + obj.wigth - 3 > obs.position.x) &&
+      (obj.position.x < obs.position.x + obs.wigth)) {
+    if ((obj.position.y + obj.height <= obs.position.y) &&
+     (obj.position.y + obj.height + obj.velocity.y >= obs.position.y)) {
       return 'Down';
     }
 
-    if ((obj.position.y >= obstacle.position.y + obstacle.height) &&
-     (obj.position.y + obj.velocity.y <= obstacle.position.y + obstacle.height)) {
+    if ((obj.position.y >= obs.position.y + obs.height) &&
+     (obj.position.y + obj.velocity.y <= obs.position.y + obs.height)) {
       return 'Up';
     }
   }
 };
 
-
-function Restart() {
-}
-
-function SaveLevel(enemys, blocks) {
-  const Level = {
-    enemys,
-    blocks,
-  };
-  //fs.writeFileSync('Level.txt', JSON.stringify(Level), 'utf-8');
-}
 
 
 
