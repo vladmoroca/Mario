@@ -1,5 +1,7 @@
 'use strict';
 
+const button = document.querySelector('input');
+
 const goomba = './assets/goomba.png';
 const tube = './assets/tube.png';
 const block = './assets/block.png';
@@ -106,5 +108,7 @@ addEventListener('dblclick', e => {
   const ys = e.offsetY - (e.offsetY % 50);
   blocks.push(new Block({ x: xs, y: ys }, block));
 });
+
+button.addEventListener('click', Restart);
 
 Restart();
