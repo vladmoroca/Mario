@@ -6,6 +6,9 @@ const goomba = './assets/goomba.png';
 const tube = './assets/tube.png';
 const block = './assets/block.png';
 
+const PlayerSpeed = 7;
+const PlayerJump = 20;
+
 let player;
 let GameTimer;
 let Enemys = [];
@@ -25,6 +28,9 @@ const Restart = () => {
 
   GameTimer = setInterval(() => {
     player.Update();
+    if (player.position.y > innerHeight) {
+      Restart();
+    }
     blocks.forEach(block => {
       block.draw();
       const col = Colision(player, block);
@@ -43,6 +49,9 @@ const Restart = () => {
     });
     Enemys.forEach((enemy, index) => {
       enemy.position.x += player.velocity.x;
+      if (enemy.position.y > innerHeight) {
+        Enemys.splice(index, 1);
+      }
       enemy.Update();
       blocks.forEach(block => {
         block.draw();
@@ -63,7 +72,7 @@ const Restart = () => {
       }
       if (Colision(player, enemy) === 'Down') {
         Enemys.splice(index, 1);
-        player.velocity.y = -20;
+        player.velocity.y = -PlayerJump;
       }
     });
   }, 20);
@@ -72,21 +81,21 @@ const Restart = () => {
 
 addEventListener('keydown', event => {
   switch (event.key) {
-  case 'w':         //space
+  case 'w':
     if (player.velocity.y === 0) {
-      player.velocity.y -= 20;
+      player.velocity.y -= PlayerJump;
     }
     break;
   case ' ':         //space
     if (player.velocity.y === 0) {
-      player.velocity.y -= 20;
+      player.velocity.y -= PlayerJump;
     }
     break;
   case 'a':
-    player.velocity.x = 7;
+    player.velocity.x = PlayerSpeed;
     break;
   case 'd':
-    player.velocity.x = -7;
+    player.velocity.x = -PlayerSpeed;
     break;
   }
 });

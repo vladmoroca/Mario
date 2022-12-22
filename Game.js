@@ -30,9 +30,7 @@ class Player {
   Update() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     this.position.y += this.velocity.y;
-    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
-      this.velocity.y += gravity;
-    } else this.velocity.y = 0;
+    this.velocity.y += gravity;
     this.draw();
   }
 }
@@ -60,9 +58,7 @@ class Enemy {
   Update() {
     this.position.y += this.velocity.y;
     this.position.x -= this.velocity.x;
-    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
-      this.velocity.y += gravity;
-    } else this.velocity.y = 0;
+    this.velocity.y += gravity;
     this.draw();
   }
 }
