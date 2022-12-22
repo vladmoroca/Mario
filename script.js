@@ -27,7 +27,6 @@ const Restart = () => {
       block.draw();
       const col = Colision(player, block);
       if (col === 'Right' || col === 'Left') {
-        player.position.x += player.velocity.x;
         player.velocity.x = 0;
       }
       if (col === 'Up') {

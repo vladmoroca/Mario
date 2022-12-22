@@ -102,8 +102,8 @@ const Colision = (obj, obs) => {
     return 'Right';
   }
 
-  if ((obj.position.x + obj.wigth - 3 > obs.position.x) &&
-      (obj.position.x < obs.position.x + obs.wigth)) {
+  if ((obj.position.x + obj.wigth - 5 > obs.position.x) &&
+      (obj.position.x + 5 < obs.position.x + obs.wigth)) {
     if ((obj.position.y + obj.height <= obs.position.y) &&
      (obj.position.y + obj.height + obj.velocity.y >= obs.position.y)) {
       return 'Down';
