@@ -5,20 +5,21 @@ const context = canvas.getContext('2d');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-const gravity = 0.7;
+const BasicSize = innerWidth / 40;
+const gravity = BasicSize / 60;
 
 class Player {
   constructor() {
     this.position = {
-      x: 800,
-      y: 600
+      x: BasicSize * 16,
+      y: BasicSize * 12
     };
     this.velocity = {
       x: 0,
       y: 1
     };
-    this.wigth = 40;
-    this.height = 50;
+    this.wigth = 4 / 5 * BasicSize;
+    this.height = BasicSize;
     this.skin = document.createElement('img');
     this.skin.src = './assets/mario.png';
   }
@@ -42,11 +43,11 @@ class Enemy {
       y
     };
     this.velocity = {
-      x: 5,
-      y: 1
+      x: BasicSize / 10,
+      y: BasicSize / 50
     };
-    this.wigth = 40;
-    this.height = 50;
+    this.wigth = 4 / 5 * BasicSize;
+    this.height = BasicSize;
     this.skin = document.createElement('img');
     this.skin.src = src;
   }
@@ -71,8 +72,8 @@ class Block {
       x,
       y
     };
-    this.wigth = 50;
-    this.height = 50;
+    this.wigth = BasicSize;
+    this.height = BasicSize;
     this.skin = document.createElement('img');
     this.skin.src = src;
     this.skin.animatea;

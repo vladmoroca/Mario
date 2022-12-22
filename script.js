@@ -1,13 +1,14 @@
 'use strict';
 
 const button = document.querySelector('input');
+button.size = BasicSize;
 
 const goomba = './assets/goomba.png';
 const tube = './assets/tube.png';
 const block = './assets/block.png';
 
-const PlayerSpeed = 7;
-const PlayerJump = 20;
+const PlayerSpeed = BasicSize / 7;
+const PlayerJump = BasicSize /2.5;
 
 let player;
 let GameTimer;
@@ -20,10 +21,10 @@ const Restart = () => {
   blocks = [];
   player = new Player();
 
-  Enemys.push(new Enemy({ x: 900, y: 100 }, goomba));
+  Enemys.push(new Enemy({ x: BasicSize * 20, y: BasicSize * 10 }, goomba));
 
   for (let i = 0; i <= 100; i++) {
-    blocks.push(new Block({ x: i * 50, y: 700 }, block));
+    blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 15 }, block));
   }
 
   GameTimer = setInterval(() => {
@@ -67,6 +68,7 @@ const Restart = () => {
         }
       });
       const PCol = Colision(enemy, player);
+      console.log(PCol);
       if (PCol === 'Right' || PCol === 'Left') {
         Restart();
       }
@@ -89,6 +91,7 @@ addEventListener('keydown', event => {
   case ' ':         //space
     if (player.velocity.y === 0) {
       player.velocity.y -= PlayerJump;
+      console.log(PlayerJump);
     }
     break;
   case 'a':
@@ -113,8 +116,8 @@ addEventListener('keyup', event => {
 });
 
 addEventListener('dblclick', e => {
-  const xs = e.offsetX - (e.offsetX % 50);
-  const ys = e.offsetY - (e.offsetY % 50);
+  const xs = e.offsetX - (e.offsetX % BasicSize);
+  const ys = e.offsetY - (e.offsetY % BasicSize);
   blocks.push(new Block({ x: xs, y: ys }, block));
 });
 
