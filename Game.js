@@ -46,11 +46,11 @@ class Player {
   Animation() {
     if (this.velocity.x < 0) {
       this.frames++;
-      if (this.frames === 4 || this.frames < 0) this.frames = 0;
+      if (this.frames >= 4 || this.frames < 0) this.frames = 0;
     }
     if (this.velocity.x > 0) {
       this.frames--;
-      if (this.frames === -5 || this.frames > 0) this.frames = -1;
+      if (this.frames <= -5 || this.frames > 0) this.frames = -1;
     }
     if (this.velocity.x === 0) {
       if (this.frames < 0) {
@@ -127,8 +127,8 @@ const Colision = (obj, obs) => {
     return 'Right';
   }
 
-  if ((obj.position.x + obj.wigth - 5 > obs.position.x) &&
-      (obj.position.x + 5 < obs.position.x + obs.wigth)) {
+  if ((obj.position.x + obj.wigth - 15 > obs.position.x) &&
+      (obj.position.x + 15 < obs.position.x + obs.wigth)) {
     if ((obj.position.y + obj.height <= obs.position.y) &&
      (obj.position.y + obj.height + obj.velocity.y >= obs.position.y)) {
       return 'Down';
