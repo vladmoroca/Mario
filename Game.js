@@ -57,6 +57,10 @@ class Player {
         this.frames = -1;
       } else this.frames = 0;
     }
+    if (this.velocity.y !== 0) {
+      if (this.frames >= 0) this.frames = 5;
+      if (this.frames < 0) this.frames = -6;
+    }
   }
 }
 
