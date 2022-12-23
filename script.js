@@ -3,14 +3,14 @@
 const button = document.querySelector('input');
 button.size = BasicSize;
 
-const goomba = './assets/goomba.png';
+const enemies = './assets/enemies.png';
 const tube = './assets/tube.png';
 const block = './assets/block.png';
 
 const PlayerSpeed = BasicSize / 7;
-const PlayerJump = BasicSize /2.5;
+const PlayerJump = BasicSize / 2.5;
 const GameSpeed = 20; // more - slower
-const AnimationSpeed = 80;
+const AnimationSpeed = 200;
 
 let player;
 let GameTimer;
@@ -67,14 +67,21 @@ const Update = () => {
       Restart();
     }
     if (Colision(player, enemy) === 'Down') {
-      Enemys.splice(index, 1);
+      enemy.frames = 2;
+      enemy.velocity.x = 0;
+      enemy.position.y += 5;
       player.velocity.y = -PlayerJump;
+      setTimeout(() => {
+        Enemys.splice(index, 1);
+      },
+      1000);
     }
   });
 };
 
 const Animation = () => {
   player.Animation();
+  Enemys.forEach(enemy => enemy.Animation());
 };
 
 const Restart = () => {
@@ -84,7 +91,7 @@ const Restart = () => {
   blocks = [];
   player = new Player();
 
-  Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 8 }, goomba));
+  Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 8 }, enemies));
 
   for (let i = -5; i <= 200; i++) {
     blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 10 }, block));

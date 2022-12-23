@@ -78,17 +78,31 @@ class Enemy {
     this.height = BasicSize;
     this.skin = document.createElement('img');
     this.skin.src = src;
+    this.frames = 0;
+    this.condition = 0;
   }
 
   draw() {
-    context.drawImage(this.skin, this.position.x,
-      this.position.y, this.wigth, this.height);
+    context.drawImage(this.skin,
+      0 + (this.frames * 29),
+      0,
+      25,
+      20,
+      this.position.x,
+      this.position.y,
+      this.wigth,
+      this.height);
   }
   Update() {
     this.position.y += this.velocity.y;
     this.position.x -= this.velocity.x;
     this.velocity.y += gravity;
     this.draw();
+  }
+  Animation() {
+    if (this.frames === 1) {
+      this.frames = 0;
+    } else if (this.frames === 0) this.frames++;
   }
 }
 
