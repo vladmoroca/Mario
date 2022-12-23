@@ -4,35 +4,59 @@ const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 
 canvas.width = innerWidth;
-canvas.height = innerHeight;
-const BasicSize = innerWidth / 40;
+canvas.height = innerWidth / 2;
+const BasicSize = innerWidth / 30;
 const gravity = BasicSize / 60;
 
 class Player {
   constructor() {
     this.position = {
       x: BasicSize * 16,
-      y: BasicSize * 12
+      y: BasicSize * 8
     };
     this.velocity = {
       x: 0,
       y: 1
     };
-    this.wigth = 4 / 5 * BasicSize;
+    this.wigth = BasicSize;
     this.height = BasicSize;
     this.skin = document.createElement('img');
     this.skin.src = './assets/mario.png';
+    this.frames = 0;
+    this.condition = 0;
   }
 
   draw() {
-    context.drawImage(this.skin, this.position.x, this.position.y,
-      this.wigth, this.height);
+    context.drawImage(this.skin,
+      205 + (this.frames * 29),
+      this.condition,
+      25,
+      16,
+      this.position.x,
+      this.position.y,
+      this.wigth,
+      this.height);
   }
   Update() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     this.position.y += this.velocity.y;
     this.velocity.y += gravity;
     this.draw();
+  }
+  Animation() {
+    if (this.velocity.x < 0) {
+      this.frames++;
+      if (this.frames === 4 || this.frames < 0) this.frames = 0;
+    }
+    if (this.velocity.x > 0) {
+      this.frames--;
+      if (this.frames === -5 || this.frames > 0) this.frames = -1;
+    }
+    if (this.velocity.x === 0) {
+      if (this.frames < 0) {
+        this.frames = -1;
+      } else this.frames = 0;
+    }
   }
 }
 
@@ -46,7 +70,7 @@ class Enemy {
       x: BasicSize / 10,
       y: BasicSize / 50
     };
-    this.wigth = 4 / 5 * BasicSize;
+    this.wigth = BasicSize;
     this.height = BasicSize;
     this.skin = document.createElement('img');
     this.skin.src = src;

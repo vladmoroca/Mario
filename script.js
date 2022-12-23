@@ -9,75 +9,89 @@ const block = './assets/block.png';
 
 const PlayerSpeed = BasicSize / 7;
 const PlayerJump = BasicSize /2.5;
+const GameSpeed = 20; // more - slower
+const AnimationSpeed = 80;
 
 let player;
 let GameTimer;
+let AnimationTimer;
 let Enemys = [];
 let blocks = [];
 
+const Update = () => {
+  player.Update();
+  if (player.position.y > innerHeight) {
+    Restart();
+  }
+
+  blocks.forEach(block => {
+    block.draw();
+    const col = Colision(player, block);
+    if (col === 'Right' || col === 'Left') {
+      player.velocity.x = 0;
+    }
+    if (col === 'Up') {
+      player.velocity.y = 1;
+    }
+    if (col === 'Down') {
+      player.velocity.y = 0;
+    }
+  });
+
+  blocks.forEach(block => {
+    block.position.x += player.velocity.x;
+  });
+
+  Enemys.forEach((enemy, index) => {
+    enemy.position.x += player.velocity.x;
+    if (enemy.position.y > innerHeight) {
+      Enemys.splice(index, 1);
+    }
+    enemy.Update();
+    blocks.forEach(block => {
+      block.draw();
+      const col = Colision(enemy, block);
+      if (col === 'Right' || col === 'Left') {
+        enemy.velocity.x *= -1;
+      }
+      if (col === 'Up') {
+        enemy.velocity.y = 1;
+      }
+      if (col === 'Down') {
+        enemy.velocity.y = 0;
+      }
+    });
+
+    const PCol = Colision(enemy, player);
+    if (PCol === 'Right' || PCol === 'Left') {
+      Restart();
+    }
+    if (Colision(player, enemy) === 'Down') {
+      Enemys.splice(index, 1);
+      player.velocity.y = -PlayerJump;
+    }
+  });
+};
+
+const Animation = () => {
+  player.Animation();
+};
+
 const Restart = () => {
   clearInterval(GameTimer);
+  clearInterval(AnimationTimer);
   Enemys = [];
   blocks = [];
   player = new Player();
 
-  Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 10 }, goomba));
+  Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 8 }, goomba));
 
-  for (let i = 0; i <= 100; i++) {
-    blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 15 }, block));
+  for (let i = -5; i <= 200; i++) {
+    blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 10 }, block));
   }
 
-  GameTimer = setInterval(() => {
-    player.Update();
-    if (player.position.y > innerHeight) {
-      Restart();
-    }
-    blocks.forEach(block => {
-      block.draw();
-      const col = Colision(player, block);
-      if (col === 'Right' || col === 'Left') {
-        player.velocity.x = 0;
-      }
-      if (col === 'Up') {
-        player.velocity.y = 1;
-      }
-      if (col === 'Down') {
-        player.velocity.y = 0;
-      }
-    });
-    blocks.forEach(block => {
-      block.position.x += player.velocity.x;
-    });
-    Enemys.forEach((enemy, index) => {
-      enemy.position.x += player.velocity.x;
-      if (enemy.position.y > innerHeight) {
-        Enemys.splice(index, 1);
-      }
-      enemy.Update();
-      blocks.forEach(block => {
-        block.draw();
-        const col = Colision(enemy, block);
-        if (col === 'Right' || col === 'Left') {
-          enemy.velocity.x *= -1;
-        }
-        if (col === 'Up') {
-          enemy.velocity.y = 1;
-        }
-        if (col === 'Down') {
-          enemy.velocity.y = 0;
-        }
-      });
-      const PCol = Colision(enemy, player);
-      console.log(PCol);
-      if (PCol === 'Right' || PCol === 'Left') {
-        Restart();
-      }
-      if (Colision(player, enemy) === 'Down') {
-        Enemys.splice(index, 1);
-        player.velocity.y = -PlayerJump;
-      }
-    });
-  }, 20);
+  GameTimer = setInterval(Update, GameSpeed);
+  AnimationTimer = setInterval(Animation, AnimationSpeed);
 };
 
 
@@ -91,7 +105,6 @@ addEventListener('keydown', event => {
   case ' ':         //space
     if (player.velocity.y === 0) {
       player.velocity.y -= PlayerJump;
-      console.log(PlayerJump);
     }
     break;
   case 'a':
