@@ -65,7 +65,7 @@ class Player {
 }
 
 class Enemy {
-  constructor({ x, y }, src) {
+  constructor({ x, y }) {
     this.position = {
       x,
       y
@@ -77,7 +77,7 @@ class Enemy {
     this.wigth = BasicSize;
     this.height = BasicSize;
     this.skin = document.createElement('img');
-    this.skin.src = src;
+    this.skin.src = './assets/enemies.png';
     this.frames = 0;
     this.condition = 0;
   }
@@ -109,40 +109,49 @@ class Enemy {
 
 
 class Block {
-  constructor({ x, y }, src) {
+  constructor({ x, y }) {
     this.position = {
       x,
       y
     };
+    this.velocity = {
+      x: 0,
+      y: 0
+    };
     this.wigth = BasicSize;
     this.height = BasicSize;
     this.skin = document.createElement('img');
-    this.skin.src = src;
+    this.skin.src = './assets/block.jpg';
     this.skin.animatea;
   }
   draw() {
-    context.drawImage(this.skin, this.position.x,
-      this.position.y, this.wigth, this.height);
+    context.drawImage(this.skin,
+      this.position.x,
+      this.position.y,
+      this.wigth,
+      this.height);
   }
 }
 
 const Colision = (obj, obs) => {
   if ((obj.position.x + obj.wigth >= obs.position.x) &&
-   (obj.position.x + obj.wigth + obj.velocity.x <= obs.position.x) &&
+   (obj.position.x + obj.wigth + obj.velocity.x <=
+    obs.position.x + obs.velocity.x) &&
    (obj.position.y <= obs.position.y + obs.height) &&
    (obj.position.y + obj.height >= obs.position.y)) {
     return 'Left';
   }
 
   if ((obj.position.x <= obs.position.x + obs.wigth) &&
-   (obj.position.x + obj.velocity.x >= obs.position.x + obs.wigth) &&
+   (obj.position.x + obj.velocity.x >=
+    obs.position.x + obs.wigth + obs.velocity.x) &&
    (obj.position.y <= obs.position.y + obs.height) &&
    (obj.position.y + obj.height >= obs.position.y)) {
     return 'Right';
   }
 
-  if ((obj.position.x + obj.wigth - 15 > obs.position.x) &&
-      (obj.position.x + 15 < obs.position.x + obs.wigth)) {
+  if ((obj.position.x + obj.wigth - 2 > obs.position.x) &&
+      (obj.position.x + 2 < obs.position.x + obs.wigth)) {
     if ((obj.position.y + obj.height <= obs.position.y) &&
      (obj.position.y + obj.height + obj.velocity.y >= obs.position.y)) {
       return 'Down';
