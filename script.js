@@ -119,7 +119,7 @@ const Play = () => {
   });
 };
 
-const Restart = (level = {}) => {
+const Restart = (level = 0) => {
   distance = 0;
   Play();
   clearInterval(GameTimer);
@@ -127,15 +127,20 @@ const Restart = (level = {}) => {
   Enemys = [];
   Blocks = [];
   player = new Player();
-  if (!level.lenght) {
+  if (level === 0) {
+    console.log(0);
     Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 8 }));
 
     for (let i = -5; i <= 200; i++) {
       Blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 10 }));
     }
   } else {
-    Enemys = level.Enemys;
-    Blocks = level.Blocks;
+    level.Enemys.forEach(enemy => {
+      Enemys.push(new Enemy(enemy.position));
+    });
+    level.Blocks.forEach(block => {
+      Blocks.push(new Block(block.position));
+    });
   }
 
   GameTimer = setInterval(Update, GameSpeed);
@@ -165,6 +170,7 @@ const Save = () => {
     Enemys,
     Blocks
   };
+  console.log(Level.Blocks.length);
   const blob = new Blob([JSON.stringify(Level)], { type: 'text/javascript' });
   const link = document.createElement('a');
   link.setAttribute('href', URL.createObjectURL(blob));
