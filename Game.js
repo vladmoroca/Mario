@@ -72,7 +72,7 @@ class Enemy {
     };
     this.velocity = {
       x: BasicSize / 10,
-      y: BasicSize / 50
+      y: 0
     };
     this.wigth = BasicSize;
     this.height = BasicSize;

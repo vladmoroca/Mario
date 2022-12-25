@@ -10,6 +10,7 @@ const PlayerJump = BasicSize / 2.5;
 const GameSpeed = 20; // more - slower
 const AnimationSpeed = 100;
 let distance = 0;
+let CurrentLevel = 0;
 
 let player;
 let GameTimer;
@@ -20,7 +21,7 @@ let Blocks = [];
 const Update = () => {
   player.Update();
   if (player.position.y > innerHeight) {
-    Restart();
+    Restart(CurrentLevel);
   }
   distance -= player.velocity.x;
   Blocks.forEach(block => {
@@ -63,8 +64,7 @@ const Update = () => {
 
     const PCol = Colision(enemy, player);
     if (PCol === 'Right' || PCol === 'Left') {
-      console.log(1);
-      Restart();
+      Restart(CurrentLevel);
     }
     if (Colision(player, enemy) === 'Down') {
       enemy.frames = 2;
@@ -119,49 +119,68 @@ const Play = () => {
   });
 };
 
-const Restart = (level = 0) => {
+const Restart = level => {
   distance = 0;
   Play();
   clearInterval(GameTimer);
   clearInterval(AnimationTimer);
   Enemys = [];
   Blocks = [];
-  player = new Player();
   if (level === 0) {
-    console.log(0);
     Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 8 }));
 
     for (let i = -5; i <= 200; i++) {
       Blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 10 }));
     }
   } else {
-    level.Enemys.forEach(enemy => {
-      Enemys.push(new Enemy(enemy.position));
-    });
     level.Blocks.forEach(block => {
       Blocks.push(new Block(block.position));
     });
+    level.Enemys.forEach(enemy => {
+      Enemys.push(new Enemy(enemy.position));
+    });
   }
+  player = new Player();
 
   GameTimer = setInterval(Update, GameSpeed);
   AnimationTimer = setInterval(Animation, AnimationSpeed);
 };
 
 const CreateMod = () => {
-  Restart();
+  Restart(CurrentLevel);
   Enemys.forEach(enemy => {
     enemy.velocity.x = 0;
   });
-  addEventListener('mousedown', e => {
-    const xs = e.offsetX - (e.offsetX % BasicSize);
-    const ys = e.offsetY - (e.offsetY % BasicSize);
-    Blocks.push(new Block({ x: xs, y: ys }));
+  addEventListener('keydown', event => {
+    addEventListener('mousedown', e => {
+      if (event.key === 'e') {
+        const xs = e.offsetX - (e.offsetX % BasicSize);
+        const ys = e.offsetY - (e.offsetY % BasicSize);
+        Blocks.push(new Block({ x: xs, y: ys }));
+      }
+      if (event.key === 'r') {
+        Blocks.forEach((block, index) => {
+          if (e.offsetX > block.position.x &&
+             e.offsetX < block.position.x + block.wigth &&
+             e.offsetY > block.position.y &&
+             e.offsetY < block.position.y + block.height) {
+            Blocks.splice(index, 1);
+          }
+        });
+      }
+    });
   });
 };
 
 
-button.addEventListener('mousedown', Restart);
-button2.addEventListener('mousedown', CreateMod);
+button.addEventListener('mousedown', () => {
+  button3.style.display = 'none';
+  Restart(CurrentLevel);
+});
+button2.addEventListener('mousedown', () => {
+  button3.style.display = '';
+  CreateMod();
+});
 
 
 const Save = () => {
@@ -174,7 +193,7 @@ const Save = () => {
   const blob = new Blob([JSON.stringify(Level)], { type: 'text/javascript' });
   const link = document.createElement('a');
   link.setAttribute('href', URL.createObjectURL(blob));
-  link.setAttribute('download', 'MyLevel.js');
+  link.setAttribute('download', 'MyLevel.json');
   link.click();
 };
 
@@ -188,7 +207,8 @@ const Import = () => {
     reader.readAsText(file, 'UTF-8');
     reader.onload = readerEvent => {
       content = JSON.parse(readerEvent.target.result);
-      Restart(content);
+      CurrentLevel = content;
+      CreateMod();
     };
   };
   input.click();
@@ -196,5 +216,5 @@ const Import = () => {
 
 button3.addEventListener('mousedown', Save);
 button4.addEventListener('mousedown', Import);
-
+button3.style.display = 'none';
 
