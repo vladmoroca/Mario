@@ -25,6 +25,9 @@ const Update = () => {
   }
   distance -= player.velocity.x;
   Blocks.forEach(block => {
+    if (block.position.x > 1500 || block.position.x < -100) {
+      return;
+    }
     block.draw();
     const col = Colision(player, block);
     if (col === 'Right' || col === 'Left') {
@@ -49,6 +52,10 @@ const Update = () => {
     }
     enemy.Update();
     Blocks.forEach(block => {
+      if (block.position.x > enemy.position.x + 200 ||
+         block.position.x < enemy.position.x - 200) {
+        return;
+      }
       block.draw();
       const col = Colision(enemy, block);
       if (col === 'Right' || col === 'Left') {
@@ -169,6 +176,23 @@ const CreateMod = () => {
         });
       }
     });
+    removeEventListener('mousedown', e => {
+      if (event.key === 'e') {
+        const xs = e.offsetX - (e.offsetX % BasicSize);
+        const ys = e.offsetY - (e.offsetY % BasicSize);
+        Blocks.push(new Block({ x: xs, y: ys }));
+      }
+      if (event.key === 'r') {
+        Blocks.forEach((block, index) => {
+          if (e.offsetX > block.position.x &&
+             e.offsetX < block.position.x + block.wigth &&
+             e.offsetY > block.position.y &&
+             e.offsetY < block.position.y + block.height) {
+            Blocks.splice(index, 1);
+          }
+        });
+      }
+    });
   });
 };
 
@@ -189,7 +213,6 @@ const Save = () => {
     Enemys,
     Blocks
   };
-  console.log(Level.Blocks.length);
   const blob = new Blob([JSON.stringify(Level)], { type: 'text/javascript' });
   const link = document.createElement('a');
   link.setAttribute('href', URL.createObjectURL(blob));
