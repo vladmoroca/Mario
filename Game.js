@@ -63,9 +63,9 @@ class Player {
     }
   }
 }
-
 class Enemy {
-  constructor({ x, y }) {
+  constructor({ x, y }, name = 'Enemy') {
+    this.name = name;
     this.position = {
       x,
       y
@@ -81,7 +81,6 @@ class Enemy {
     this.frames = 0;
     this.condition = 0;
   }
-
   draw() {
     context.drawImage(this.skin,
       0 + (this.frames * 29),
@@ -106,9 +105,51 @@ class Enemy {
   }
 }
 
-class Goomba extends Enemy {
+const EnemysClass = {
+  Goomba: class extends Enemy {
+    constructor({ x, y }) {
+      super({ x, y }, 'Goomba');
+    }
+    draw() {
+      context.drawImage(this.skin,
+        0 + (this.frames * 29),
+        0,
+        25,
+        20,
+        this.position.x,
+        this.position.y,
+        this.wigth,
+        this.height);
+    }
+  },
 
-}
+  Turtle: class extends Enemy {
+    constructor({ x, y }) {
+      super({ x, y }, 'Turtle');
+    }
+    draw() {
+      context.drawImage(this.skin,
+        198 + (this.frames * 30),
+        0,
+        30,
+        23,
+        this.position.x,
+        this.position.y,
+        this.wigth + 20,
+        this.height);
+    }
+    Animation() {
+      if (this.velocity.x < 0) {
+        this.frames++;
+        if (this.frames >= 2 || this.frames < 0) this.frames = 0;
+      }
+      if (this.velocity.x > 0) {
+        this.frames--;
+        if (this.frames <= -3 || this.frames > 0) this.frames = -1;
+      }
+    }
+  }
+};
 
 
 

@@ -151,7 +151,8 @@ const Restart = level => {
   Enemys = [];
   Blocks = [];
   if (level === 0) {
-    Enemys.push(new Goomba({ x: BasicSize * 30, y: BasicSize * 8 }));
+    Enemys.push(new EnemysClass['Turtle']({ x: BasicSize * 30,
+      y: BasicSize * 8 }));
 
     for (let i = -5; i <= 200; i++) {
       Blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 10 }));
@@ -161,7 +162,7 @@ const Restart = level => {
       Blocks.push(new Block(block.position));
     });
     level.Enemys.forEach(enemy => {
-      Enemys.push(new Enemy(enemy.position));
+      Enemys.push(new EnemysClass[enemy.name](enemy.position));
     });
   }
   player = new Player();
