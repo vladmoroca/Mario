@@ -1,9 +1,10 @@
 'use strict';
 
-const button = document.querySelector('#RestartButton');
-const button2 = document.querySelector('#CreatorButton');
-const button3 = document.querySelector('#SaveButton');
-const button4 = document.querySelector('#ImportButton');
+const ButtonRestart = document.querySelector('#RestartButton');
+const ButtonCreateMod = document.querySelector('#CreatorButton');
+const ButtonSave = document.querySelector('#SaveButton');
+const ButtonImport = document.querySelector('#ImportButton');
+const ButtonBlock = document.querySelector('#BlockButton');
 
 const PlayerSpeed = BasicSize / 7;
 const PlayerJump = BasicSize / 2.5;
@@ -11,12 +12,56 @@ const GameSpeed = 20; // more - slower
 const AnimationSpeed = 100;
 let distance = 0;
 let CurrentLevel = 0;
+let createMod = false;
 
 let player;
 let GameTimer;
 let AnimationTimer;
 let Enemys = [];
 let Blocks = [];
+
+const ButtonShow = () => {
+  if (createMod) {
+    ButtonSave.style.display = '';
+    ButtonBlock.style.display = '';
+  } else {
+    ButtonSave.style.display = 'none';
+    ButtonBlock.style.display = 'none';
+  }
+};
+
+const keys = {
+  87: { velocity: { x: 0, y: -PlayerJump } }, //w
+  65: { velocity: { x: PlayerSpeed, y: 0 } }, //a
+  68: { velocity: { x: -PlayerSpeed, y: 0 } }, //d
+  37: { velocity: { x: PlayerSpeed, y: 0 } },
+  38: { velocity: { x: 0, y: -PlayerJump } }, //Arrows
+  39: { velocity: { x: -PlayerSpeed, y: 0 } },
+  32: { velocity: { x: 0, y: -PlayerJump } }, //Space
+};
+const keyboardInput = coll => {
+  onkeydown = el => {
+    for (const key of Object.keys(coll)) {
+      if (el.keyCode == key) {
+        if (coll[key].velocity.x) {
+          player.velocity.x = coll[key].velocity.x;
+        }
+        if ((coll[key].velocity.y) && player.velocity.y === 0) {
+          player.velocity.y = coll[key].velocity.y;
+        }
+      }
+    }
+  };
+  onkeyup = el => {
+    for (const key of Object.keys(coll)) {
+      if (el.keyCode == key) {
+        if (coll[key].velocity.x) {
+          player.velocity.x = 0;
+        }
+      }
+    }
+  };
+};
 
 const Update = () => {
   player.Update();
@@ -25,7 +70,7 @@ const Update = () => {
   }
   distance -= player.velocity.x;
   Blocks.forEach(block => {
-    if (block.position.x > 1500 || block.position.x < -100) {
+    if (block.position.x > 1900 || block.position.x < -100) {
       return;
     }
     block.draw();
@@ -52,8 +97,8 @@ const Update = () => {
     }
     enemy.Update();
     Blocks.forEach(block => {
-      if (block.position.x > enemy.position.x + 200 ||
-         block.position.x < enemy.position.x - 200) {
+      if (block.position.x > enemy.position.x + 300 ||
+         block.position.x < enemy.position.x - 300) {
         return;
       }
       block.draw();
@@ -92,41 +137,13 @@ const Animation = () => {
 };
 
 const Play = () => {
-  addEventListener('keydown', event => {
-    switch (event.key) {
-    case 'w':
-      if (player.velocity.y === 0) {
-        player.velocity.y -= PlayerJump;
-      }
-      break;
-    case ' ':         //space
-      if (player.velocity.y === 0) {
-        player.velocity.y -= PlayerJump;
-      }
-      break;
-    case 'a':
-      player.velocity.x = PlayerSpeed;
-      break;
-    case 'd':
-      player.velocity.x = -PlayerSpeed;
-      break;
-    }
-  });
-
-  addEventListener('keyup', event => {
-    switch (event.key) {
-    case 'a':
-      player.velocity.x = 0;
-      break;
-    case 'd':
-      player.velocity.x = 0;
-      break;
-
-    }
-  });
+  keyboardInput(keys);
 };
 
+
 const Restart = level => {
+  createMod = false;
+  ButtonShow();
   distance = 0;
   Play();
   clearInterval(GameTimer);
@@ -134,7 +151,7 @@ const Restart = level => {
   Enemys = [];
   Blocks = [];
   if (level === 0) {
-    Enemys.push(new Enemy({ x: BasicSize * 30, y: BasicSize * 8 }));
+    Enemys.push(new Goomba({ x: BasicSize * 30, y: BasicSize * 8 }));
 
     for (let i = -5; i <= 200; i++) {
       Blocks.push(new Block({ x: i * BasicSize, y: BasicSize * 10 }));
@@ -148,63 +165,19 @@ const Restart = level => {
     });
   }
   player = new Player();
-
   GameTimer = setInterval(Update, GameSpeed);
   AnimationTimer = setInterval(Animation, AnimationSpeed);
 };
 
 const CreateMod = () => {
   Restart(CurrentLevel);
+  createMod = true;
+  ButtonShow();
   Enemys.forEach(enemy => {
     enemy.velocity.x = 0;
   });
-  addEventListener('keydown', event => {
-    addEventListener('mousedown', e => {
-      if (event.key === 'e') {
-        const xs = e.offsetX - (e.offsetX % BasicSize);
-        const ys = e.offsetY - (e.offsetY % BasicSize);
-        Blocks.push(new Block({ x: xs, y: ys }));
-      }
-      if (event.key === 'r') {
-        Blocks.forEach((block, index) => {
-          if (e.offsetX > block.position.x &&
-             e.offsetX < block.position.x + block.wigth &&
-             e.offsetY > block.position.y &&
-             e.offsetY < block.position.y + block.height) {
-            Blocks.splice(index, 1);
-          }
-        });
-      }
-    });
-    removeEventListener('mousedown', e => {
-      if (event.key === 'e') {
-        const xs = e.offsetX - (e.offsetX % BasicSize);
-        const ys = e.offsetY - (e.offsetY % BasicSize);
-        Blocks.push(new Block({ x: xs, y: ys }));
-      }
-      if (event.key === 'r') {
-        Blocks.forEach((block, index) => {
-          if (e.offsetX > block.position.x &&
-             e.offsetX < block.position.x + block.wigth &&
-             e.offsetY > block.position.y &&
-             e.offsetY < block.position.y + block.height) {
-            Blocks.splice(index, 1);
-          }
-        });
-      }
-    });
-  });
 };
 
-
-button.addEventListener('mousedown', () => {
-  button3.style.display = 'none';
-  Restart(CurrentLevel);
-});
-button2.addEventListener('mousedown', () => {
-  button3.style.display = '';
-  CreateMod();
-});
 
 
 const Save = () => {
@@ -237,7 +210,31 @@ const Import = () => {
   input.click();
 };
 
-button3.addEventListener('mousedown', Save);
-button4.addEventListener('mousedown', Import);
-button3.style.display = 'none';
+const CreateBlock = () => {
+  if (createMod) {
+    addEventListener('keydown', event => {
+      addEventListener('mousedown', e => {
+        if (createMod) {
+          if (event.key === 'e') {
+            const xs = e.offsetX - (e.offsetX % BasicSize);
+            const ys = e.offsetY - (e.offsetY % BasicSize);
+            Blocks.push(new Block({ x: xs, y: ys }));
+          }
+          if (event.key === 'r') {
+            Blocks.forEach((block, index) => {
+              if (e.offsetX > block.position.x &&
+             e.offsetX < block.position.x + block.wigth &&
+             e.offsetY > block.position.y &&
+             e.offsetY < block.position.y + block.height) {
+                Blocks.splice(index, 1);
+              }
+            });
+          }
+        }
+      });
+    });
+  }
+};
+
+ButtonShow();
 

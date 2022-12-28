@@ -106,6 +106,10 @@ class Enemy {
   }
 }
 
+class Goomba extends Enemy {
+
+}
+
 
 
 class Block {
