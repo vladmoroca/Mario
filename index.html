@@ -11,14 +11,20 @@
   <style> 
   </style>
   <div id = "root">
-    <input type = "button" value = "Restart" id = "RestartButton" onclick="Restart(CurrentLevel)">
-    <input type = "button" value = "LevelCreator" id = "CreatorButton" onclick="CreateMod()">
+    <input type = "button" value = "Restart" id = "RestartButton" onclick="Play()">
+    <input type = "button" value = "LevelCreator" id = "CreatorButton" onclick="Create()">
     <input type = "button" value = "Save" id = "SaveButton" onclick="Save()">
     <input type = "button" value = "Import" id = "ImportButton" onclick="Import()" >
-    <button><img height ="40" src="./assets/block.jpg" onclick="CreateBlock()" id = "BlockButton" title="Block"></button>
+    <button><img height ="40" src="./assets/block.jpg" onclick="control.keyboardInput('Floor')" id = "BlockButton" title="Block"></button>
+    <button><img height ="40" src="./assets/Goomba.png" onclick="control.keyboardInput('Goomba')" id = "GoombaButton" title="Goomba"></button>
+    <button><img height ="40" src="./assets/Turtle.png" onclick="control.keyboardInput('Turtle')" id = "TurtleButton" title="Turtle"></button>
     <canvas id = "canvas"></canvas>
   </div>
-  <script src="Game.js"> </script>
-  <script src="script.js"> </script>
+  <script src="src/Enemys.js"> </script>
+  <script src="src/Blocks.js"> </script>
+  <script src="src/Player.js"> </script>
+  <script src="src/Game.js"> </script>
+  <script src="src/Control.js"> </script>
+  <script src="src/script.js"> </script>
 
 </body>
