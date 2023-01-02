@@ -65,9 +65,7 @@ class Game {
       this.Start(this.CurrentLevel);
     }
 
-    this.Blocks.forEach((block, index) => {
-      if (block.position.x > 1900 || block.position.x < -100) return;
-      block.draw();
+    this.Check(this.Blocks, 0, 0, (block, index) => {
       const col = this.Colision(this.player, block);
       if (col === 'Right' || col === 'Left') {
         this.player.velocity.x = 0;
@@ -85,82 +83,42 @@ class Game {
         this.player.velocity.y = 0;
       }
     });
-    this.Blocks.forEach(block => {
-      block.position.x += this.player.velocity.x;
-    });
 
-    this.Bonuses.forEach((bonus, index) => {
-      bonus.position.x += this.player.velocity.x;
-      if (bonus.position.y > innerHeight) {
-        this.Bonuses.splice(index, 1);
+    this.Check(this.Bonuses, this.Blocks, (col, bonus) => {
+      if (col === 'Right' || col === 'Left') {
+        bonus.velocity.x *= -1;
       }
-      bonus.Update(this.gravity);
-      this.Blocks.forEach(block => {
-        if (block.position.x > bonus.position.x + 300 ||
-           block.position.x < bonus.position.x - 300) {
-          return;
-        }
-        block.draw();
-        const col = this.Colision(bonus, block);
-        if (col === 'Right' || col === 'Left') {
-          bonus.velocity.x *= -1;
-        }
-        if (col === 'Up') {
-          bonus.velocity.y = 1;
-        }
-        if (col === 'Down') {
-          bonus.velocity.y = 0;
-        }
-      });
+      if (col === 'Down') {
+        bonus.velocity.y = 0;
+      }
+    }, (bonus, index) => {
       if (this.Colision(bonus, this.player)) {
         bonus.award(this);
         this.Bonuses.splice(index, 1);
       }
     });
 
-    this.Activity.forEach((activity, index) => {
-      if (!activity.position.x || activity.position.x > 10000) {
+    this.Check(this.Activity, this.Blocks, (col, activity, index) => {
+      if (col) {
         this.Activity.splice(index, 1);
       }
-      activity.Update();
-      this.Blocks.forEach(block => {
-        if (this.Colision(activity, block)) {
-          this.Activity.splice(index, 1);
-        }
-      });
-      this.Enemys.forEach((enemy, index2) => {
-        if (this.Colision(activity, enemy)) {
-          this.Enemys.splice(index2, 1);
-          this.Activity.splice(index, 1);
-        }
-      });
+    });
+    this.Check(this.Activity, this.Enemys, (col, act, index, enemy, index2) => {
+      if (col) {
+        this.Enemys.splice(index2, 1);
+        this.Activity.splice(index, 1);
+      }
     });
 
-    this.Enemys.forEach((enemy, index) => {
-      enemy.position.x += this.player.velocity.x;
-      if (enemy.position.y > innerHeight) {
-        this.Enemys.splice(index, 1);
+    this.Check(this.Enemys, this.Blocks, (col, enemy) => {
+      if (col === 'Right' || col === 'Left') {
+        enemy.velocity.x *= -1;
       }
-      enemy.Update(this.gravity);
-      this.Blocks.forEach(block => {
-        if (block.position.x > enemy.position.x + 300 ||
-           block.position.x < enemy.position.x - 300) {
-          return;
-        }
-        block.draw();
-        const col = this.Colision(enemy, block);
-        if (col === 'Right' || col === 'Left') {
-          enemy.velocity.x *= -1;
-        }
-        if (col === 'Up') {
-          enemy.velocity.y = 1;
-        }
-        if (col === 'Down') {
-          enemy.velocity.y = 0;
-        }
-      });
-
-      const PCol = this.Colision(enemy, this.player);
+      if (col === 'Down') {
+        enemy.velocity.y = 0;
+      }
+    }, (enemy, index) => {
+      const PCol = this.Colision(this.player, enemy);
       if (PCol === 'Right' || PCol === 'Left') {
         if (this.player.condition > 0) {
           this.player.condition = 0;
@@ -168,7 +126,7 @@ class Game {
           this.player.animationNum = 29;
         } else this.Start(this.CurrentLevel);
       }
-      if (this.Colision(this.player, enemy) === 'Down') {
+      if (PCol === 'Down') {
         enemy.velocity.x = 0;
         this.player.velocity.y = -this.PlayerJump;
         if (enemy.name === 'Turtle') {
@@ -243,27 +201,26 @@ class Game {
     if (this.createMod) {
       const xs = e.offsetX - (e.offsetX % this.BasicSize);
       const ys = e.offsetY - (e.offsetY % this.BasicSize);
-      for (const key of Object.keys(EnemysClasses)) {
-        if (this.creating === key) {
-          this.Enemys.push(new EnemysClasses[this.creating]({ x: xs, y: ys },
-            this.BasicSize, this.context));
+      const f = (colection, arr) => {
+        for (const key of Object.keys(colection)) {
+          if (this.creating === key) {
+            arr.push(new colection[this.creating]({ x: xs, y: ys },
+              this.BasicSize, this.context));
+          }
         }
-      }
-      for (const key of Object.keys(BlockClasses)) {
-        if (this.creating === key) {
-          this.Blocks.push(new BlockClasses[this.creating]({ x: xs, y: ys },
-            this.BasicSize, this.context));
-        }
-      }
+      };
+      f(EnemysClasses, this.Enemys);
+      f(BlockClasses, this.Blocks);
     }
   }
 
   Delete(event, arr) {
     arr.forEach((el, index) => {
-      if (event.offsetX > el.position.x &&
-        event.offsetX < el.position.x + el.wigth &&
-        event.offsetY > el.position.y &&
-        event.offsetY < el.position.y + el.height) {
+      const x = event.offsetX;
+      const y = event.offsetY;
+      const mouseHit = (x > el.position.x && x < el.position.x + el.wigth &&
+        y > el.position.y && y < el.position.y + el.height);
+      if (mouseHit) {
         arr.splice(index, 1);
       }
     });
@@ -288,6 +245,33 @@ class Game {
         { x: this.player.position.x, y: this.player.position.y },
         this.BasicSize, this.context));
     }
+  }
+
+  Check(arr, arr2, instruction, instruction2) {
+    arr.forEach((el, index) => {
+      if (el.position.y > innerHeight) {
+        arr.splice(index, 1);
+      }
+      el.position.x += this.player.velocity.x;
+      if (el.position.x > 1900 || el.position.x < -100) return;
+
+      if (el.Update) {
+        el.Update(this.gravity);
+      } else el.draw();
+
+      if (arr2) {
+        arr2.forEach((el2, index2) => {
+          if (el2.position.x > el.position.x + 300 ||
+          el2.position.x < el.position.x - 300) {
+            return;
+          }
+          instruction(this.Colision(el, el2), el, index, el2, index2);
+        });
+      }
+      if (instruction2) {
+        instruction2(el, index);
+      }
+    });
   }
 }
 

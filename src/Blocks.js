@@ -17,7 +17,6 @@ class Block {
     this.context = context;
     this.skin = document.createElement('img');
     this.skin.src = src;
-    this.skin.animatea;
   }
   draw() {
     this.context.drawImage(this.skin,
