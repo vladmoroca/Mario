@@ -39,6 +39,9 @@ class Control {
         }
       }
       if (!el.repeat) {
+        if (el.key === 'f') {
+          this.game.Shot();
+        }
         if (el.key === 'e') {
           addEventListener('click', create);
         }

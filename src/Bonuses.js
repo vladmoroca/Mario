@@ -82,6 +82,7 @@ const BonusClasses = {
       game.player.condition = 7;
       game.player.size = 2;
       game.player.animationNum = 27;
+      game.player.charge += 3;
     }
   },
 

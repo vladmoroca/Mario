@@ -17,7 +17,6 @@ class Enemy {
     this.skin = document.createElement('img');
     this.skin.src = './assets/enemies.png';
     this.frames = 0;
-    this.condition = 0;
   }
   draw() {
     this.context.drawImage(this.skin,

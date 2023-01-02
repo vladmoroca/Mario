@@ -20,6 +20,7 @@ class Player {
     this.condition = 0;
     this.size = 1;
     this.animationNum = 29;
+    this.charge = 0;
   }
 
   draw() {

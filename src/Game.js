@@ -22,6 +22,7 @@ class Game {
     this.Enemys = [];
     this.Blocks = [];
     this.Bonuses = [];
+    this.Activity = [];
     this.Scores = 0;
     this.Score = document.getElementById('Score');
   }
@@ -89,7 +90,6 @@ class Game {
     });
 
     this.Bonuses.forEach((bonus, index) => {
-      bonus.draw();
       bonus.position.x += this.player.velocity.x;
       if (bonus.position.y > innerHeight) {
         this.Bonuses.splice(index, 1);
@@ -116,6 +116,24 @@ class Game {
         bonus.award(this);
         this.Bonuses.splice(index, 1);
       }
+    });
+
+    this.Activity.forEach((activity, index) => {
+      if (!activity.position.x || activity.position.x > 10000) {
+        this.Activity.splice(index, 1);
+      }
+      activity.Update();
+      this.Blocks.forEach(block => {
+        if (this.Colision(activity, block)) {
+          this.Activity.splice(index, 1);
+        }
+      });
+      this.Enemys.forEach((enemy, index2) => {
+        if (this.Colision(activity, enemy)) {
+          this.Enemys.splice(index2, 1);
+          this.Activity.splice(index, 1);
+        }
+      });
     });
 
     this.Enemys.forEach((enemy, index) => {
@@ -182,6 +200,8 @@ class Game {
     clearInterval(this.AnimationTimer);
     this.Enemys = [];
     this.Blocks = [];
+    this.Bonuses = [];
+    this.Activity = [];
     if (this.CurrentLevel === 0) {
       this.Enemys.push(new EnemysClasses['Turtle']({ x: this.BasicSize * 30,
         y: this.BasicSize * 8 }, this.BasicSize, this.context));
@@ -258,6 +278,15 @@ class Game {
       this.Bonuses.push(new BonusClasses[bonusName]({ x: block.position.x,
         y: block.position.y - this.BasicSize },
       this.BasicSize, this.context));
+    }
+  }
+
+  Shot() {
+    if (this.player.charge > 0) {
+      this.player.charge--;
+      this.Activity.push(new ActivityClasses['FireBall'](
+        { x: this.player.position.x, y: this.player.position.y },
+        this.BasicSize, this.context));
     }
   }
 }
