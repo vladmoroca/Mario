@@ -108,17 +108,25 @@ class Game {
         this.Start(this.CurrentLevel);
       }
       if (this.Colision(this.player, enemy) === 'Down') {
-        enemy.frames = 2;
         enemy.velocity.x = 0;
-        enemy.position.y += 5;
         this.player.velocity.y = -this.PlayerJump;
-        setTimeout(() => {
-          this.Enemys.splice(index, 1);
-        },
-        2000);
+        if (enemy.name === 'Turtle') {
+          if (enemy.frames === 5) {
+            enemy.velocity.x = this.BasicSize / 10;
+          } else enemy.frames = 5;
+        } else {
+          enemy.frames = 2;
+          enemy.position.y += 5;
+          setTimeout(() => {
+            this.Enemys.splice(index, 1);
+          },
+          2000);
+        }
       }
     });
   }
+
+
 
   Animation() {
     this.player.Animation();

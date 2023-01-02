@@ -64,11 +64,12 @@ const EnemysClasses = {
   Turtle: class extends Enemy {
     constructor({ x, y }, BasicSize, context) {
       super({ x, y },  BasicSize, context, 'Turtle');
+      this.condition = 0;
     }
     draw() {
       this.context.drawImage(this.skin,
         198 + (this.frames * 30),
-        0,
+        0 + this.condition,
         30,
         23,
         this.position.x,
@@ -77,13 +78,17 @@ const EnemysClasses = {
         this.height);
     }
     Animation() {
-      if (this.velocity.x < 0) {
-        this.frames++;
-        if (this.frames >= 2 || this.frames < 0) this.frames = 0;
-      }
-      if (this.velocity.x > 0) {
-        this.frames--;
-        if (this.frames <= -3 || this.frames > 0) this.frames = -1;
+      if (this.frames === 5) {
+        this.condition = -5;
+      } else {
+        if (this.velocity.x < 0) {
+          this.frames++;
+          if (this.frames >= 2 || this.frames < 0) this.frames = 0;
+        }
+        if (this.velocity.x > 0) {
+          this.frames--;
+          if (this.frames <= -3 || this.frames > 0) this.frames = -1;
+        }
       }
     }
   }
