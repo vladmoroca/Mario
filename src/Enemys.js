@@ -65,6 +65,7 @@ const EnemysClasses = {
     constructor({ x, y }, BasicSize, context) {
       super({ x, y },  BasicSize, context, 'Turtle');
       this.condition = 0;
+      this.wigth += 20;
     }
     draw() {
       this.context.drawImage(this.skin,
@@ -74,7 +75,7 @@ const EnemysClasses = {
         23,
         this.position.x,
         this.position.y,
-        this.wigth + 20,
+        this.wigth,
         this.height);
     }
     Animation() {

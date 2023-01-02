@@ -11,6 +11,7 @@
   <style> 
   </style>
   <div id = "root">
+    <div id="Score">Score:</div>
     <input type = "button" value = "Restart" id = "RestartButton" onclick="Play()">
     <input type = "button" value = "LevelCreator" id = "CreatorButton" onclick="Create()">
     <input type = "button" value = "Save" id = "SaveButton" onclick="Save()">
@@ -18,6 +19,7 @@
     <button><img height ="40" src="./assets/block.jpg" onclick="control.keyboardInput('Floor')" id = "BlockButton" title="Block"></button>
     <button><img height ="40" src="./assets/Goomba.png" onclick="control.keyboardInput('Goomba')" id = "GoombaButton" title="Goomba"></button>
     <button><img height ="40" src="./assets/Turtle.png" onclick="control.keyboardInput('Turtle')" id = "TurtleButton" title="Turtle"></button>
+    <button><img height ="40" src="./assets/Surprise.gif" onclick="control.keyboardInput('Surprise')" id = "SurpriseButton" title="Surprise"></button>
     <canvas id = "canvas"></canvas>
   </div>
   <script src="src/Enemys.js"> </script>
@@ -26,5 +28,6 @@
   <script src="src/Game.js"> </script>
   <script src="src/Control.js"> </script>
   <script src="src/script.js"> </script>
+  <script src="src/Bonuses.js"> </script>
 
 </body>

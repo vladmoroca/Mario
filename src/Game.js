@@ -14,7 +14,6 @@ class Game {
     this.PlayerJump = this.BasicSize / 2.5;
     this.GameSpeed = 20; // more - slower
     this.AnimationSpeed = 100;
-    this.distance = 0;
     this.CurrentLevel = 0;
     this.createMod = false;
     this.creating = 0;
@@ -22,6 +21,9 @@ class Game {
     this.AnimationTimer;
     this.Enemys = [];
     this.Blocks = [];
+    this.Bonuses = [];
+    this.Scores = 0;
+    this.Score = document.getElementById('Score');
   }
 
   Colision(obj, obs) {
@@ -55,13 +57,14 @@ class Game {
     }
   }
   Update() {
+    this.Score.textContent = 'Scores:' + this.Scores;
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.player.Update(this.gravity);
     if (this.player.position.y > innerHeight) {
       this.Start(this.CurrentLevel);
     }
-    this.distance -= this.player.velocity.x;
-    this.Blocks.forEach(block => {
+
+    this.Blocks.forEach((block, index) => {
       if (block.position.x > 1900 || block.position.x < -100) return;
       block.draw();
       const col = this.Colision(this.player, block);
@@ -69,6 +72,12 @@ class Game {
         this.player.velocity.x = 0;
       }
       if (col === 'Up') {
+        if (block.name === 'Floor' && this.player.condition > 0) {
+          this.Blocks.splice(index, 1);
+        }
+        if (block.Surprise) {
+          this.BonusSpawn(block.Surprise(), block);
+        }
         this.player.velocity.y = 1;
       }
       if (col === 'Down') {
@@ -77,6 +86,36 @@ class Game {
     });
     this.Blocks.forEach(block => {
       block.position.x += this.player.velocity.x;
+    });
+
+    this.Bonuses.forEach((bonus, index) => {
+      bonus.draw();
+      bonus.position.x += this.player.velocity.x;
+      if (bonus.position.y > innerHeight) {
+        this.Bonuses.splice(index, 1);
+      }
+      bonus.Update(this.gravity);
+      this.Blocks.forEach(block => {
+        if (block.position.x > bonus.position.x + 300 ||
+           block.position.x < bonus.position.x - 300) {
+          return;
+        }
+        block.draw();
+        const col = this.Colision(bonus, block);
+        if (col === 'Right' || col === 'Left') {
+          bonus.velocity.x *= -1;
+        }
+        if (col === 'Up') {
+          bonus.velocity.y = 1;
+        }
+        if (col === 'Down') {
+          bonus.velocity.y = 0;
+        }
+      });
+      if (this.Colision(bonus, this.player)) {
+        bonus.award(this);
+        this.Bonuses.splice(index, 1);
+      }
     });
 
     this.Enemys.forEach((enemy, index) => {
@@ -105,7 +144,11 @@ class Game {
 
       const PCol = this.Colision(enemy, this.player);
       if (PCol === 'Right' || PCol === 'Left') {
-        this.Start(this.CurrentLevel);
+        if (this.player.condition > 0) {
+          this.player.condition = 0;
+          this.player.size = 1;
+          this.player.animationNum = 29;
+        } else this.Start(this.CurrentLevel);
       }
       if (this.Colision(this.player, enemy) === 'Down') {
         enemy.velocity.x = 0;
@@ -115,6 +158,7 @@ class Game {
             enemy.velocity.x = this.BasicSize / 10;
           } else enemy.frames = 5;
         } else {
+          this.Scores += 100;
           enemy.frames = 2;
           enemy.position.y += 5;
           setTimeout(() => {
@@ -126,8 +170,6 @@ class Game {
     });
   }
 
-
-
   Animation() {
     this.player.Animation();
     this.Enemys.forEach(enemy => enemy.Animation());
@@ -136,7 +178,6 @@ class Game {
   Start() {
     this.creating = 0;
     this.createMod = false;
-    this.distance = 0;
     clearInterval(this.GameTimer);
     clearInterval(this.AnimationTimer);
     this.Enemys = [];
@@ -145,9 +186,11 @@ class Game {
       this.Enemys.push(new EnemysClasses['Turtle']({ x: this.BasicSize * 30,
         y: this.BasicSize * 8 }, this.BasicSize, this.context));
       for (let i = -5; i <= 200; i++) {
-        this.Blocks.push(new Block({ x: i * this.BasicSize,
+        this.Blocks.push(new BlockClasses.Floor({ x: i * this.BasicSize,
           y: this.BasicSize * 10 },  this.BasicSize, this.context));
       }
+      this.Blocks.push(new BlockClasses.Surprise({ x: this.BasicSize * 28,
+        y: this.BasicSize * 7 }, this.BasicSize, this.context));
     } else {
       this.CurrentLevel.Blocks.forEach(block => {
         this.Blocks.push(new Block(block.position,
@@ -204,6 +247,18 @@ class Game {
         arr.splice(index, 1);
       }
     });
+  }
+
+  BonusSpawn(int, block) {
+    let bonusName;
+    if (int >= 3) bonusName = 'Coin';
+    if (int >= 6) bonusName = 'Mushroom';
+    if (int >= 9) bonusName = 'Flower';
+    if (bonusName) {
+      this.Bonuses.push(new BonusClasses[bonusName]({ x: block.position.x,
+        y: block.position.y - this.BasicSize },
+      this.BasicSize, this.context));
+    }
   }
 }
 

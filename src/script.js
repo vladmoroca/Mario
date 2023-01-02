@@ -5,9 +5,12 @@ const ButtonCreateMod = document.querySelector('#CreatorButton');
 const ButtonSave = document.querySelector('#SaveButton');
 const ButtonImport = document.querySelector('#ImportButton');
 const ButtonBlock = document.querySelector('#BlockButton');
+const ButtonSurprise = document.querySelector('#SurpriseButton');
 const ButtonGoomba = document.querySelector('#GoombaButton');
 const ButtonTurtle = document.querySelector('#TurtleButton');
-const createButtons = [ButtonSave, ButtonGoomba, ButtonBlock, ButtonTurtle];
+const Score = document.getElementById('Score');
+const createButtons = [ButtonSave, ButtonGoomba, ButtonBlock,
+  ButtonTurtle, ButtonSurprise];
 
 const game = new Game();
 const control = new Control(game);
