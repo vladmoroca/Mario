@@ -19,7 +19,7 @@ export default class Game {
     this.checker = new ColisionChecker(this);
     this.GameSpeed = 20; // more - slower
     this.AnimationSpeed = 100;
-    this.CurrentLevel = level;
+    this.CurrentLevel = 0;
     this.createMod = false;
     this.creating = 0;
     this.GameTimer;
@@ -70,6 +70,16 @@ export default class Game {
     this.Blocks = [];
     this.Bonuses = [];
     this.Activity = [];
+    if(!this.CurrentLevel){
+    this.Enemys.push(new EnemysClasses['Turtle']({ x: this.BasicSize * 30,
+      y: this.BasicSize * 8 }, this.BasicSize, this.context));
+    for (let i = -5; i <= 200; i++) {
+      this.Blocks.push(new BlockClasses.Floor({ x: i * this.BasicSize,
+        y: this.BasicSize * 10 },  this.BasicSize, this.context));
+    }
+    this.Blocks.push(new BlockClasses.Surprise({ x: this.BasicSize * 28,
+      y: this.BasicSize * 7 }, this.BasicSize, this.context));
+    } else {
     this.CurrentLevel.Blocks.forEach(block => {
       this.Blocks.push(new BlockClasses[block.name](block.position,
         this.BasicSize, this.context));
@@ -78,6 +88,7 @@ export default class Game {
       this.Enemys.push(new EnemysClasses[enemy.name](enemy.position,
         this.BasicSize, this.context));
       });
+    }
     this.player = new Player(this.BasicSize, this.canvas);
     this.GameTimer = setInterval(() => this.Update(), this.GameSpeed);
     this.AnimationTimer = setInterval(() => this.Animation(), this.AnimationSpeed);
@@ -98,6 +109,7 @@ export default class Game {
         if (colection[this.creating]) {
           arr.push(new colection[this.creating]({ x: xs, y: ys },
             this.BasicSize, this.context));
+          arr[arr.length -1].velocity.x = 0;
         }
       };
       f(EnemysClasses, this.Enemys);
