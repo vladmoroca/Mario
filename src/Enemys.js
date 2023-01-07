@@ -36,13 +36,11 @@ class Enemy {
     this.draw();
   }
   Animation() {
-    if (this.frames === 1) {
-      this.frames = 0;
-    } else if (this.frames === 0) this.frames++;
+    this.frames ? this.frames = 0: this.frames++;
   }
 }
 
-const EnemysClasses = {
+export const EnemysClasses = {
   Goomba: class extends Enemy {
     constructor({ x, y }, BasicSize, context) {
       super({ x, y }, BasicSize, context, 'Goomba');
@@ -65,6 +63,7 @@ const EnemysClasses = {
       super({ x, y },  BasicSize, context, 'Turtle');
       this.condition = 0;
       this.wigth += 20;
+      this.turn = 0;
     }
     draw() {
       this.context.drawImage(this.skin,
@@ -81,14 +80,9 @@ const EnemysClasses = {
       if (this.frames === 5) {
         this.condition = -5;
       } else {
-        if (this.velocity.x < 0) {
-          this.frames++;
-          if (this.frames >= 2 || this.frames < 0) this.frames = 0;
-        }
-        if (this.velocity.x > 0) {
-          this.frames--;
-          if (this.frames <= -3 || this.frames > 0) this.frames = -1;
-        }
+        this.velocity.x < 0 ? this.turn = 0: this.turn = -1;
+        this.frames += 1 + 2 * this.turn;
+        if (this.frames >= 2 || this.frames <= -3) this.frames = this.turn;
       }
     }
   }

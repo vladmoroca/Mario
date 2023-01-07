@@ -35,7 +35,7 @@ class Activity {
   }
 }
 
-const ActivityClasses = {
+export const ActivityClasses = {
   FireBall: class extends Activity {
     constructor({ x, y }, BasicSize, context) {
       super({ x, y }, BasicSize, context, 'FireBall');

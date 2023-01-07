@@ -12,23 +12,17 @@
   </style>
   <div id = "root">
     <div id="Score">Score:</div>
-    <input type = "button" value = "Restart" id = "RestartButton" onclick="Play()">
-    <input type = "button" value = "LevelCreator" id = "CreatorButton" onclick="Create()">
-    <input type = "button" value = "Save" id = "SaveButton" onclick="Save()">
-    <input type = "button" value = "Import" id = "ImportButton" onclick="Import()" >
-    <button><img height ="40" src="./assets/block.jpg" onclick="control.keyboardInput('Floor')" id = "BlockButton" title="Block"></button>
-    <button><img height ="40" src="./assets/Goomba.png" onclick="control.keyboardInput('Goomba')" id = "GoombaButton" title="Goomba"></button>
-    <button><img height ="40" src="./assets/Turtle.png" onclick="control.keyboardInput('Turtle')" id = "TurtleButton" title="Turtle"></button>
-    <button><img height ="40" src="./assets/Surprise.gif" onclick="control.keyboardInput('Surprise')" id = "SurpriseButton" title="Surprise"></button>
+    <input type = "button" value = "Restart" id = "RestartButton">
+    <input type = "button" value = "LevelCreator" id = "CreatorButton">
+    <input type = "button" value = "Save" id = "SaveButton">
+    <input type = "button" value = "Import" id = "ImportButton" >
+    <button><img height ="40" src="./assets/block.jpg" id = "BlockButton" title="Block"></button>
+    <button><img height ="40" src="./assets/Goomba.png" id = "GoombaButton" title="Goomba"></button>
+    <button><img height ="40" src="./assets/Turtle.png" id = "TurtleButton" title="Turtle"></button>
+    <button><img height ="40" src="./assets/Surprise.gif" id = "SurpriseButton" title="Surprise"></button>
+    <button><img height ="40" src="./assets/Tube.png" id = "TubeUpButton" title="TubeUp"></button>
+    <button><img height ="40" src="./assets/Tube.png" id = "TubeButton" title="Tube"></button>
     <canvas id = "canvas"></canvas>
   </div>
-  <script src="src/Enemys.js"> </script>
-  <script src="src/Blocks.js"> </script>
-  <script src="src/Player.js"> </script>
-  <script src="src/Game.js"> </script>
-  <script src="src/Control.js"> </script>
-  <script src="src/script.js"> </script>
-  <script src="src/Bonuses.js"> </script>
-  <script src="src/Activity.js"> </script>
-
+  <script type="module" src="src/script.js"> </script>
 </body>

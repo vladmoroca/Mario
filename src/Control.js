@@ -1,6 +1,6 @@
 'use strict';
 
-class Control {
+export default class Control {
   constructor(game) {
     this.game = game;
     this.keys = {
@@ -15,55 +15,34 @@ class Control {
   }
 
   keyboardInput(obj = '') {
-    const create = e => {
-      if (this.game.createMod) {
-        this.game.CreateObject(e, obj);
-      }
-    };
+    const create = e => this.game.createMod ? this.game.CreateObject(e, obj): {};
     const del = e => {
       if (this.game.createMod) {
         this.game.Delete(e, this.game.Enemys);
         this.game.Delete(e, this.game.Blocks);
       }
     };
+
     onkeydown = el => {
-      for (const key of Object.keys(this.keys)) {
-        if (el.keyCode == key) {
-          if (this.keys[key].velocity.x) {
-            this.game.player.velocity.x = this.keys[key].velocity.x;
-          }
-          if ((this.keys[key].velocity.y) &&
-           this.game.player.velocity.y === 0) {
-            this.game.player.velocity.y = this.keys[key].velocity.y;
-          }
-        }
-      }
       if (!el.repeat) {
-        if (el.key === 'f') {
-          this.game.Shot();
+        if (this.keys[el.keyCode]) {
+          if (this.keys[el.keyCode].velocity.x) {
+            this.game.player.velocity.x = this.keys[el.keyCode].velocity.x;
+          } else if (this.game.player.velocity.y === 0) {
+            this.game.player.velocity.y = this.keys[el.keyCode].velocity.y;
+          }
         }
-        if (el.key === 'e') {
-          addEventListener('click', create);
-        }
-        if (el.key === 'r') {
-          addEventListener('click', del);
-        }
+        el.key === 'f' ? this.game.Shot():{};
+        el.key === 'e' ? addEventListener('click', create):{};
+        el.key === 'r' ? addEventListener('click', del):{};
       }
     };
     onkeyup = el => {
-      for (const key of Object.keys(this.keys)) {
-        if (el.keyCode == key) {
-          if (this.keys[key].velocity.x) {
-            this.game.player.velocity.x = 0;
-          }
+      if (this.keys[el.keyCode]) {
+        this.keys[el.keyCode].velocity.x ? this.game.player.velocity.x = 0:{};
         }
-      }
-      if (el.key === 'e') {
-        removeEventListener('click', create);
-      }
-      if (el.key === 'r') {
-        removeEventListener('click', del);
-      }
+      el.key === 'e' ? removeEventListener('click', create):{};
+      el.key === 'r' ? removeEventListener('click', del):{};
     };
   }
 }

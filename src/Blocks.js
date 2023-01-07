@@ -27,7 +27,7 @@ class Block {
   }
 }
 
-const BlockClasses = {
+export const BlockClasses = {
   Floor: class extends Block {
     constructor({ x, y }, BasicSize, context) {
       super({ x, y }, BasicSize, context, './assets/block.jpg', 'Floor');
@@ -58,5 +58,41 @@ const BlockClasses = {
         return Math.floor(Math.random() * 10);
       } else return 0;
     }
-  }
+  },
+
+  TubeUp: class extends Block {
+    constructor({ x, y }, BasicSize, context) {
+      super({ x, y }, BasicSize, context, './assets/Tube.png', 'TubeUp');
+      this.wigth = BasicSize * 3;
+      this.height = BasicSize * 2;
+    }
+    draw() {
+      this.context.drawImage(this.skin,
+        100,
+        100,
+        310,
+        200,
+        this.position.x,
+        this.position.y,
+        this.wigth,
+        this.height);
+    }
+  },
+  Tube: class extends Block {
+    constructor({ x, y }, BasicSize, context) {
+      super({ x, y }, BasicSize, context, './assets/Tube.png', 'TubeUp');
+      this.wigth = BasicSize * 3;
+    }
+    draw() {
+      this.context.drawImage(this.skin,
+        100,
+        250,
+        310,
+        160,
+        this.position.x,
+        this.position.y,
+        this.wigth,
+        this.height);
+    }
+  },
 };

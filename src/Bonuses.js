@@ -39,7 +39,7 @@ class Bonus {
   }
 }
 
-const BonusClasses = {
+export const BonusClasses = {
   Mushroom: class extends Bonus {
     constructor({ x, y }, BasicSize, context) {
       super({ x, y }, BasicSize, context, 'Mushroom');
@@ -101,6 +101,9 @@ const BonusClasses = {
         this.position.y,
         this.wigth,
         this.height);
+    }
+    Update() {
+      this.draw();
     }
     award(game) {
       game.Scores += 1000;

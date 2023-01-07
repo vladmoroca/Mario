@@ -9,6 +9,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "eslint": "^8.30.0"
-  }
+    "npm": "^9.2.0",
+    "requirejs": "^2.3.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vladmoroca/Mario.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vladmoroca/Mario/issues"
+  },
+  "homepage": "https://github.com/vladmoroca/Mario#readme"
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-class Player {
+export class Player {
   constructor(BasicSize, canvas) {
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d');
@@ -21,6 +21,7 @@ class Player {
     this.size = 1;
     this.animationNum = 29;
     this.charge = 0;
+    this.turn = 0;
   }
 
   draw() {
@@ -41,30 +42,14 @@ class Player {
     this.draw();
   }
   Animation() {
-    if (this.velocity.x < 0) {
-      this.frames++;
-      if (this.frames >= 4 || this.frames < 0) this.frames = 0;
+    this.velocity.x > 0 ? this.turn = -1:
+    this.velocity.x < 0 ? this.turn = 0:{};
+    this.frames += 1 + 2 * this.turn;
+    if (this.frames > 3 || this.frames < -4  || !this.velocity.x) {
+      this.frames = this.turn;
     }
-    if (this.velocity.x > 0) {
-      this.frames--;
-      if (this.frames <= -5 || this.frames > 0) this.frames = -1;
-    }
-    if (this.velocity.x === 0) {
-      if (this.frames < 0) {
-        this.frames = -1;
-      } else this.frames = 0;
-    }
-    if (this.velocity.y !== 0) {
-      if (this.frames >= 0) {
-        if (this.condition === 7) {
-          this.frames = 5.5;
-        } else this.frames = 5;
-      }
-      if (this.frames < 0) {
-        if (this.condition === 7) {
-          this.frames = -6.7;
-        } else this.frames = -6;
-      }
+    if (this.velocity.y) {
+      this.condition === 7 ? this.frames = 5.5 - 12 * this.turn: this.frames = 5 + 11 * this.turn;
     }
   }
 }

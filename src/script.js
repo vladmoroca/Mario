@@ -1,34 +1,24 @@
 'use strict';
 
-const ButtonRestart = document.querySelector('#RestartButton');
-const ButtonCreateMod = document.querySelector('#CreatorButton');
-const ButtonSave = document.querySelector('#SaveButton');
-const ButtonImport = document.querySelector('#ImportButton');
-const ButtonBlock = document.querySelector('#BlockButton');
-const ButtonSurprise = document.querySelector('#SurpriseButton');
-const ButtonGoomba = document.querySelector('#GoombaButton');
-const ButtonTurtle = document.querySelector('#TurtleButton');
 const Score = document.getElementById('Score');
-const createButtons = [ButtonSave, ButtonGoomba, ButtonBlock,
-  ButtonTurtle, ButtonSurprise];
 
-const game = new Game();
+import {Buttons} from "./Buttons.js";
+import {createButtons} from "./Buttons.js";
+import Game from "./Game.js";
+import Control from "./Control.js"
+import level1 from '../Levels/Level1.json' assert {type: 'json'};
+
+const game = new Game(level1);
 const control = new Control(game);
 
-const ButtonShow = () => {
-  if (game.createMod) {
-    for (const but of createButtons) {
-      but.style.display = '';
-    }
-  } else {
-    for (const but of createButtons) {
-      but.style.display = 'none';
-    }
+const ButtonShow = (display) => {
+  for (const button of createButtons) {
+    button[0].style.display = display;
   }
 };
 
 const Play = () => {
-  ButtonShow();
+  ButtonShow('none');
   game.Start();
   control.keyboardInput();
 };
@@ -36,37 +26,16 @@ const Play = () => {
 const Create = () => {
   Play();
   game.CreateMod();
-  ButtonShow();
+  ButtonShow('');
 };
 
-const Save = () => {
-  const Level = {
-    name: 'level1',
-    Enemys: game.Enemys,
-    Blocks: game.Blocks
-  };
-  const blob = new Blob([JSON.stringify(Level)], { type: 'text/javascript' });
-  const link = document.createElement('a');
-  link.setAttribute('href', URL.createObjectURL(blob));
-  link.setAttribute('download', 'MyLevel.json');
-  link.click();
-};
-
-const Import = () => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  let content;
-  input.onchange = e => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsText(file, 'UTF-8');
-    reader.onload = readerEvent => {
-      content = JSON.parse(readerEvent.target.result);
-      game.CurrentLevel = content;
-      Create();
-    };
-  };
-  input.click();
-};
-
-ButtonShow();
+for(const button of createButtons){
+  button[0].addEventListener('click', () => {
+    control.keyboardInput(button[1])
+  })
+}
+Buttons.ButtonSave.onclick = game.Save;
+Buttons.ButtonImport.onclick = game.Import;
+Buttons.ButtonRestart.onclick = Play;
+Buttons.ButtonCreateMod.onclick = Create;
+ButtonShow('none');
