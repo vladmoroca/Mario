@@ -36,7 +36,6 @@ export class Player {
       this.height * this.size);
   }
   Update(gravity) {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.position.y += this.velocity.y;
     this.velocity.y += gravity;
     this.draw();

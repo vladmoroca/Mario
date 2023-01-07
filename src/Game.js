@@ -5,7 +5,9 @@ import {BlockClasses} from "./Blocks.js"
 import {EnemysClasses} from "./Enemys.js"
 import {BonusClasses} from "./Bonuses.js"
 import {ActivityClasses} from "./Activity.js"
-import ColisionChecker from "./Colision.js";
+import ColisionChecker from "./Colision.js"
+import Background from "./Background.js";
+
 export default class Game {
   constructor(level = {}) {
     this.canvas = document.getElementById('canvas');
@@ -22,6 +24,7 @@ export default class Game {
     this.CurrentLevel = 0;
     this.createMod = false;
     this.creating = 0;
+    this.background = new Background(this.context);
     this.GameTimer;
     this.AnimationTimer;
     this.Enemys = [];
@@ -35,11 +38,12 @@ export default class Game {
   Update() {
     this.Score.textContent = 'Scores:' + this.Scores;
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.background.draw();
+    this.background.position.x += this.player.velocity.x / 3;
     this.player.Update(this.gravity);
     if (this.player.position.y > innerHeight) {
       this.Start(this.CurrentLevel);
     }
-
     const checker = this.checker;
     checker.Check(this.Blocks, this.player, checker.BlockPlayerColision);
     checker.Check(this.Blocks, this.Enemys, checker.BlockEnemyColision);
