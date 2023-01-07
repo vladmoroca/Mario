@@ -6,9 +6,8 @@ import {Buttons} from "./Buttons.js";
 import {createButtons} from "./Buttons.js";
 import Game from "./Game.js";
 import Control from "./Control.js"
-import level1 from '../Levels/Level1.json' assert {type: 'json'};
 
-const game = new Game(level1);
+const game = new Game();
 const control = new Control(game);
 
 const ButtonShow = (display) => {
