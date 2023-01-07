@@ -3,7 +3,7 @@
 export default class Background {
   constructor(context) {
     this.position = {
-      x: 0,
+      x: -800,
       y: 0
     };
     this.context = context;
