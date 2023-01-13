@@ -8,7 +8,7 @@ export default class Background {
     };
     this.context = context;
     this.skin = document.createElement('img');
-    this.skin.src = "./assets/background.png";
+    this.skin.src = "./assets/Background.png";
   }
   draw() {
     const BackgroundWidth = innerWidth * 5;
