@@ -33,8 +33,12 @@ for(const button of createButtons){
     control.keyboardInput(button[1])
   })
 }
-Buttons.ButtonSave.onclick = game.Save;
-Buttons.ButtonImport.onclick = game.Import;
+Buttons.ButtonSave.addEventListener('click', () => {
+  game.Save();
+})
+Buttons.ButtonImport.addEventListener('click', () => {
+  game.Import();
+})
 Buttons.ButtonRestart.onclick = Play;
 Buttons.ButtonCreateMod.onclick = Create;
 ButtonShow('none');

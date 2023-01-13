@@ -8,13 +8,15 @@ export default class Background {
     };
     this.context = context;
     this.skin = document.createElement('img');
-    this.skin.src = "../assets/Background.png";
+    this.skin.src = "./assets/background.png";
   }
   draw() {
+    const BackgroundWidth = innerWidth * 5;
+    const BackgroundHeight = innerWidth / 1.76;
     this.context.drawImage(this.skin,
       this.position.x,
       this.position.y,
-      innerWidth * 5,
-      innerWidth / 3);
+      BackgroundWidth,
+      BackgroundHeight);
   }
 }

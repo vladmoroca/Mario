@@ -86,7 +86,11 @@ export default class ColisionChecker{
   }
 
   Check(arr, arr2, colection) {
+    const LeftBorder =  -200;
+    let RightBorder = 2000;
     arr.forEach((el, index) => {
+      if(el.velocity.x) RightBorder = 1500;
+      if ( el.position.x > RightBorder || el.position.x < LeftBorder) return;
       !el.position.y ? arr.splice(index, 1):{};
       el.Update ? el.Update(this.game.gravity): el.draw();
       if (Array.isArray(arr2)) {

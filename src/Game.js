@@ -7,9 +7,10 @@ import {BonusClasses} from "./Bonuses.js"
 import {ActivityClasses} from "./Activity.js"
 import ColisionChecker from "./Colision.js"
 import Background from "./Background.js";
+import level1 from "../Levels/Level1.json" assert {type: 'json'};
 
 export default class Game {
-  constructor(level = {}) {
+  constructor(level = level1) {
     this.canvas = document.getElementById('canvas');
     this.context = this.canvas.getContext('2d');
 
@@ -20,8 +21,7 @@ export default class Game {
     this.PlayerJump = this.BasicSize / 2.5;
     this.checker = new ColisionChecker(this);
     this.GameSpeed = 20; // more - slower
-    this.AnimationSpeed = 100;
-    this.CurrentLevel = 0;
+    this.CurrentLevel = level;
     this.createMod = false;
     this.creating = 0;
     this.background = new Background(this.context);
@@ -64,6 +64,7 @@ export default class Game {
   }
 
   Start() {
+    this.background.position.x = -800;
     this.canvas.width = innerWidth;
     this.canvas.height = innerWidth / 2;
     this.creating = 0;
@@ -74,28 +75,18 @@ export default class Game {
     this.Blocks = [];
     this.Bonuses = [];
     this.Activity = [];
-    if(!this.CurrentLevel){
-    this.Enemys.push(new EnemysClasses['Turtle']({ x: this.BasicSize * 30,
-      y: this.BasicSize * 8 }, this.BasicSize, this.context));
-    for (let i = -5; i <= 200; i++) {
-      this.Blocks.push(new BlockClasses.Floor({ x: i * this.BasicSize,
-        y: this.BasicSize * 10 },  this.BasicSize, this.context));
-    }
-    this.Blocks.push(new BlockClasses.Surprise({ x: this.BasicSize * 28,
-      y: this.BasicSize * 7 }, this.BasicSize, this.context));
-    } else {
     this.CurrentLevel.Blocks.forEach(block => {
       this.Blocks.push(new BlockClasses[block.name](block.position,
         this.BasicSize, this.context));
     });
      this.CurrentLevel.Enemys.forEach(enemy => {
-      this.Enemys.push(new EnemysClasses[enemy.name](enemy.position,
-        this.BasicSize, this.context));
+      this.Enemys.push(new EnemysClasses[enemy.name]({x:enemy.position.x,
+         y:enemy.position.y - 5},
+         this.BasicSize, this.context));
       });
-    }
     this.player = new Player(this.BasicSize, this.canvas);
     this.GameTimer = setInterval(() => this.Update(), this.GameSpeed);
-    this.AnimationTimer = setInterval(() => this.Animation(), this.AnimationSpeed);
+    this.AnimationTimer = setInterval(() => this.Animation(), this.GameSpeed * 5);
   }
 
   CreateMod() {
@@ -139,7 +130,7 @@ export default class Game {
       if (int >= 6) bonusName = 'Mushroom';
       if (int >= 9) bonusName = 'Flower';
       this.Bonuses.push(new BonusClasses[bonusName]({ x: block.position.x,
-        y: block.position.y - this.BasicSize },
+        y: block.position.y - this.BasicSize - 5},
       this.BasicSize, this.context));
     }
   }
